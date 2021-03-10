@@ -4116,6 +4116,15 @@ class DataFrame(object):
             indices = indices[::-1].copy()  # this may be used a lot, so copy for performance
         return self.take(indices)
 
+    def shift(self, periods, columns=None, fill_value=None, inplace=False):
+        df = self.trim(inplace=inplace)
+        from .shift import DatasetShifted
+        columns = columns if columns is not None else self.get_column_names(virtual=False)
+        if df.filtered:
+            df._push_down_filter()
+        df.dataset = DatasetShifted(dataset=df.dataset, n=periods, columns=columns, fill_value=fill_value)
+        return df
+
     @docsubst
     def fillna(self, value, column_names=None, prefix='__original_', inplace=False):
         '''Return a DataFrame, where missing values/NaN are filled with 'value'.
