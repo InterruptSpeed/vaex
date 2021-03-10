@@ -1,5 +1,6 @@
 import vaex
 import numpy as np
+import pyarrow as pa
 
 def test_shift_basics():
     x = np.arange(4)
@@ -58,7 +59,7 @@ def test_shift_filtered():
 
 def test_shift_string():
     x = np.arange(4)
-    s = ['aap', None, 'noot', 'mies']
+    s = pa.array(['aap', None, 'noot', 'mies'])
     df = vaex.from_arrays(x=x, s=s)
     assert df.shift(1).s.tolist() == [None, 'aap', None, 'noot']
     assert df.shift(-1).s.tolist() == [None, 'noot', 'mies', None]

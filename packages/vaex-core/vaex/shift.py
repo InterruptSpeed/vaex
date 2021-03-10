@@ -11,7 +11,7 @@ class DatasetShifted(vaex.dataset.Dataset):
         self.columns = columns
         for column in self.columns:
             assert column in dataset
-        self._columns = {name: vaex.dataset.ColumnProxy(self, name, col.dtype) for name, col in self.original._columns.items()}
+        self._columns = {name: vaex.dataset.ColumnProxy(self, name, vaex.array_types.data_type(col)) for name, col in self.original._columns.items()}
         self._row_count = self.original.row_count - right_padding
 
     def _create_columns(self):
